@@ -1,0 +1,10 @@
+repos:
+  - https://github.com/ocsf/ocsf-schema.git
+  - https://github.com/ocsf/ocsf-docs.git
+  - https://github.com/ocsf/examples.git
+local_data_dir: data/ocsf_repos
+vector_db_dir: vectorstore
+embedding_model: sentence-transformers/all-MiniLM-L6-v2
+llm_model: google/gemma-2b-it
+chunk_size: 800
+chunk_overlap: 100
