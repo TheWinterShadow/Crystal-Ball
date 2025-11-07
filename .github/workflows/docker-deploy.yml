@@ -41,8 +41,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag ocsf-ai:$(date +%s)
+      - name: Generate version number
+        id: version
+        run: |
+          # Generate version using date and run number for uniqueness
+          VERSION="v1.0.${{ github.run_number }}"
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "Generated version: $VERSION"
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -56,9 +61,10 @@ jobs:
         with:
           images: ${{ secrets.DOCKERHUB_USERNAME }}/ocsf-ai
           tags: |
-            type=ref,event=branch
-            type=sha
             type=raw,value=latest
+            type=raw,value=${{ steps.version.outputs.VERSION }}
+            type=sha,prefix={{branch}}-
+            type=ref,event=branch
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -68,6 +74,13 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
+      - name: Output deployment info
+        run: |
+          echo "🚀 Successfully deployed Docker image with tags:"
+          echo "- ${{ secrets.DOCKERHUB_USERNAME }}/ocsf-ai:latest"
+          echo "- ${{ secrets.DOCKERHUB_USERNAME }}/ocsf-ai:${{ steps.version.outputs.VERSION }}"
+          echo "- SHA-based tag for this commit"
+
       - name: Update Docker Hub Description
         uses: peter-evans/dockerhub-description@v4
         with:
@@ -75,4 +88,4 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           repository: ${{ secrets.DOCKERHUB_USERNAME }}/ocsf-ai
           readme-filepath: ./README.md
-          short-description: "🔮 OCSF AI - Crystal Ball: Intelligent security data analysis with AI-powered insights"
+          short-description: "🔮 OCSF AI - Crystal Ball: Interactive Streamlit UI for OCSF analysis with multi-turn chat"
