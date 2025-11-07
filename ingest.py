@@ -1,4 +1,6 @@
-import os, yaml, json
+import os
+import yaml
+import json
 from pathlib import Path
 from git import Repo
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -13,6 +15,7 @@ DATA_DIR = Path(CONFIG["local_data_dir"])
 VECTOR_DIR = CONFIG["vector_db_dir"]
 EMB_MODEL = CONFIG["embedding_model"]
 
+
 def clone_repos():
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     for repo_url in REPOS:
@@ -25,6 +28,7 @@ def clone_repos():
             print(f"Updating {repo_name}...")
             repo = Repo(dest)
             repo.remotes.origin.pull()
+
 
 def load_files():
     """Collect all markdown and JSON files"""
@@ -49,6 +53,7 @@ def load_files():
             print(f"Skipping {f}: {e}")
     return docs
 
+
 def build_vector_db(docs):
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=CONFIG["chunk_size"], chunk_overlap=CONFIG["chunk_overlap"]
@@ -61,9 +66,11 @@ def build_vector_db(docs):
             metas.append({"source": d["path"]})
     print(f"Embedding {len(texts)} chunks...")
     embeddings = SentenceTransformerEmbeddings(model_name=EMB_MODEL)
-    vectordb = Chroma.from_texts(texts, embeddings, metadatas=metas, persist_directory=VECTOR_DIR)
+    vectordb = Chroma.from_texts(
+        texts, embeddings, metadatas=metas, persist_directory=VECTOR_DIR)
     vectordb.persist()
     print("Vector database built successfully!")
+
 
 if __name__ == "__main__":
     clone_repos()
