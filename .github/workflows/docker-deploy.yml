@@ -75,4 +75,4 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           repository: ${{ secrets.DOCKERHUB_USERNAME }}/ocsf-ai
           readme-filepath: ./README.md
-          short-description: "🔮 OCSF AI - Crystal Ball: Intelligent security data analysis platform with AI-powered insights for OCSF datasets"
+          short-description: "🔮 OCSF AI - Crystal Ball: Intelligent security data analysis with AI-powered insights"
