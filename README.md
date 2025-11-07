@@ -1,6 +1,6 @@
 # Crystal-Ball
 
-🔮 **OCSF AI - Crystal Ball** is an intelligent security data analysis platform that leverages AI to provide insights into OCSF (Open Cybersecurity Schema Framework) data.
+🔮 **OCSF AI - Crystal Ball** is an intelligent security data analysis API that leverages AI to provide insights into OCSF (Open Cybersecurity Schema Framework) data.
 
 ## Features
 
